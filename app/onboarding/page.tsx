@@ -27,7 +27,7 @@ export default function OnboardingPage() {
     selfie: null as File | null,
   });
 
-  const { mutate, isLoading } = useSubmitOnboarding();
+  const mutation = useSubmitOnboarding();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -102,7 +102,7 @@ export default function OnboardingPage() {
     data.append("pan", documents.pan);
     data.append("selfie", documents.selfie);
 
-    mutate(data, {
+    mutation.mutate(data, {
       onSuccess: (res: any) => {
         if (res?.success === false || res?.error) {
           toast.error(res.message || "Something went wrong");
@@ -260,8 +260,34 @@ export default function OnboardingPage() {
         {currentStep < 4 ? (
           <Button onClick={handleNext}>Next</Button>
         ) : (
-          <Button onClick={handleSubmit} disabled={isLoading}>
-            {isLoading ? "Submitting..." : "Submit"}
+          <Button
+            onClick={handleSubmit}
+            disabled={mutation.isPending} // use mutation object directly
+            className="flex items-center justify-center gap-2"
+          >
+            {mutation.isPending && (
+              <svg
+                className="animate-spin h-5 w-5 text-white"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                />
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8v8H4z"
+                />
+              </svg>
+            )}
+            {mutation.isPending ? "Submitting..." : "Submit"}
           </Button>
         )}
       </div>
