@@ -17,8 +17,13 @@ export const signupApi = async (payload: SignupPayload) => {
     body: JSON.stringify(payload),
   });
 
-  if (!res.ok) throw new Error("Signup failed");
-  return res.json();
+  const data = await res.json().catch(() => ({})); // in case backend returns no json
+
+  if (!res.ok) {
+    throw new Error(data.message || data.error || "Signup failed");
+  }
+
+  return data;
 };
 
 export const loginApi = async (payload: LoginPayload) => {
@@ -28,6 +33,11 @@ export const loginApi = async (payload: LoginPayload) => {
     body: JSON.stringify(payload),
   });
 
-  if (!res.ok) throw new Error("Login failed");
-  return res.json();
+  const data = await res.json().catch(() => ({}));
+
+  if (!res.ok) {
+    throw new Error(data.message || data.error || "Login failed");
+  }
+
+  return data;
 };
