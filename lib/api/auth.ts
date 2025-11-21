@@ -1,41 +1,33 @@
-// src/api/auth.ts
-
-export interface SendOtpPayload {
+export interface SignupPayload {
   email: string;
+  password: string;
 }
 
-export interface VerifyOtpPayload {
+export interface LoginPayload {
   email: string;
-  otp: string;
+  password: string;
 }
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
-// example: http://localhost:3000
 
-export const sendOtpApi = async (payload: SendOtpPayload) => {
-  const res = await fetch(`${BASE_URL}/auth/send-otp`, {
+export const signupApi = async (payload: SignupPayload) => {
+  const res = await fetch(`${BASE_URL}/auth/register`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload),
   });
 
-  if (!res.ok) {
-    throw new Error("Failed to send OTP");
-  }
-
+  if (!res.ok) throw new Error("Signup failed");
   return res.json();
 };
 
-export const verifyOtpApi = async (payload: VerifyOtpPayload) => {
-  const res = await fetch(`${BASE_URL}/auth/verify-otp`, {
+export const loginApi = async (payload: LoginPayload) => {
+  const res = await fetch(`${BASE_URL}/auth/login`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload),
   });
 
-  if (!res.ok) {
-    throw new Error("Failed to verify OTP");
-  }
-
+  if (!res.ok) throw new Error("Login failed");
   return res.json();
 };
